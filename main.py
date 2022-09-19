@@ -1,5 +1,6 @@
 #main.py
 from src import GAMES
+from src import ConnectFour
 
 if __name__ == '__main__':
     print('\nWhich game would you like to play?\n')
@@ -15,5 +16,6 @@ if __name__ == '__main__':
 
     else:
         print('Playing {}'.format(GAMES[int(choice)]))
+        locals()[GAMES[int(choice)]].main('Player 1', 'Player 2')
 
     print('Quitting...')

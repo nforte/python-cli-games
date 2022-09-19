@@ -1,2 +1,2 @@
-GAMES = {1: 'Connect Four',
-         2: 'Gomoku'}
+GAMES = {1: 'ConnectFour',
+         }
