@@ -1,5 +1,4 @@
 #Board.py
-from Piece import Piece
 
 class Board:
 
@@ -10,25 +9,29 @@ class Board:
 
     def display(self, x_label=False, y_label=False):
         bar = '   ' + '+-—-'*self.width + '+\n'
-        graph = bar #first row
+        graph = bar #bottom row
         last_row = ''
 
         #===== Create rows =====
         for i in range(self.height):
-            num = self.height - i
+            new_row = ''
+            num = i + 1
+
             row_label = '   '
             if y_label:
                 row_label = ' ' + str(num) if num > 9 else '  ' + str(num)
 
-            graph = graph + row_label + '|'
+            new_row += row_label + '|'
 
+            #==== Append cells to row =====
             for j in range(self.width):
                 if not self.board[i][j]:
-                    graph += '   |'
+                    new_row += '   |'
                 else:
-                    graph += ' ' + str(self.board[i][j]) + ' |'
+                    new_row += ' ' + str(self.board[i][j]) + ' |'
 
-            graph += '\n' + bar
+            #prepend new_rows so that (0,0) is in the bottom left corner
+            graph = bar + new_row + '\n' + graph
 
         #===== Print table if there's no bottom labelling =====
         if not x_label:
@@ -60,24 +63,17 @@ class Board:
 
     def place(self, piece, x, y):
         '''
+        Place piece on empty spot
         Returns:
-            Piece: replaced piece
+            None or Piece: returns whatever was at (x,y)
         '''
-        old_piece = self.board[y][x]
+        temp = self.board[y][x]
         self.board[y][x] = piece
-        return old_piece
+        return temp
 
-if __name__ == '__main__':
-    test = Board(8,8)
-    test.display()
-    test.display(True)
-    test.display(True, True)
-
-    tictac = Board(3,3)
-    tictac.display(True, True)
-
-    giant = Board(28,20)
-    piece = Piece('X')
-    giant.display(True, True)
-    giant.place(piece, 1, 1)
-    giant.display(True)
+    def remove(self, x, y):
+        '''
+        Returns:
+            Piece: removed piece
+        '''
+        return self.place(None, x, y)

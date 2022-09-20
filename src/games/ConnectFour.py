@@ -1,7 +1,6 @@
 #ConnectFour.py
-
-from .components.Board import Board
-from .components.Piece import Piece
+from games.classes.board import Board
+from games.classes.piece import Piece
 
 class ConnectFour:
 
@@ -23,31 +22,29 @@ class ConnectFour:
         '''
         return False
 
-    def place(self, column, piece):
+    def place(self, piece, col):
         '''
         Places piece in column
 
         Args:
-            int column
-            int piece
+            string column
+            Piece piece
         Return:
             return False if failed
         '''
+        col_num = int(col) - 1 #user input by column name, so starts at 1 not 0
 
-
+        for bottom in range(0, self.board.height):
+            if not self.board.board[bottom][col_num]:
+                self.board.place(piece, col_num, bottom)
+                return True
+        return False
 
     def play(self):
         print('Starting ConnectFour')
         self.render()
 
 
-
 def main(player1, player2):
     game = ConnectFour(player1, player2)
     game.play()
-
-if __name__ == '__main__':
-    #player1 = input("What is first player's name? ")
-    #player2 = input("What is second player's name? ")
-
-    main('Player 1', 'Player 2')
