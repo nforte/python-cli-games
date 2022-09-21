@@ -1,5 +1,6 @@
 #main.py
 from games import *
+from utils.my_os import clear
 
 if __name__ == '__main__':
     print('\nWhich game would you like to play?\n')
@@ -14,6 +15,7 @@ if __name__ == '__main__':
          print('"{}" is not a valid choice'.format(choice))
 
     else:
+        clear()
         print('Playing {}'.format(GAMES[int(choice)]))
         locals()[GAMES[int(choice)]].main('Player 1', 'Player 2')
 
