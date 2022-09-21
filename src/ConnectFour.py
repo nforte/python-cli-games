@@ -1,8 +1,8 @@
 #ConnectFour.py
 
-from games.classes.board import Board
-from games.classes.piece import Piece
-from games.classes.player import Player
+from classes.board import Board
+from classes.piece import Piece
+from classes.player import Player
 
 from utils.errors import InvalidCoordinate, InvalidPiecePlacement, OutOfBounds
 from utils import coord, my_os
@@ -26,8 +26,11 @@ class ConnectFour:
     def printBoard(self):
         self.board.print()
 
-    def clearBoard(self):
+    def reset(self):
         self.board.clear()
+        self.turn = self.player1
+        self.last_placed = []
+        self.previous_state = []
 
     def setPlayers(self, p1, p2):
         self.player1 = p1
@@ -166,7 +169,7 @@ class ConnectFour:
             except InvalidCoordinate:
                 ask = "Invalid column name. Please enter column number: "
             except OutOfBounds:
-                ask = "Out of bounds column. Please try again: "
+                ask = "Out of bounds. Please try again: "
             except InvalidPiecePlacement:
                 ask = "Column is full. Please enter a different column: "
 
@@ -200,4 +203,16 @@ def main():
     player2 = Player(input("What is second player's name? ").capitalize(), 'O')
 
     game.setPlayers(player1, player2)
-    game.play()
+
+    while True:
+        game.play()
+        print()
+        ans = input("Would you like to play again?\n[y/n]: ")
+        if not (ans.lower() == 'y' or ans.lower() == 'yes'):
+            print("\nHave a nice day!")
+            exit()
+
+        game.reset()
+
+if __name__ == '__main__':
+    main()

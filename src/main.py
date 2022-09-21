@@ -1,6 +1,11 @@
 #main.py
-from games import *
+
+import ConnectFour
+
 from utils.my_os import clear
+
+GAMES = {1: "ConnectFour",
+        }
 
 if __name__ == '__main__':
     clear()
