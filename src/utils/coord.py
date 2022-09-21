@@ -8,4 +8,4 @@ def parseCol(s:str):
     return (False, 0)
 
 def validCoord(x, x_max, y=1, y_max=1):
-    return 0 < x <= x_max or 0 < y < y_max
+    return 0 < x <= x_max and 0 < y <= y_max
