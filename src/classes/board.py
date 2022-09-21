@@ -22,7 +22,7 @@ class Board:
         '''
         x_label, y_label = self.x_label, self.y_label
 
-        bar = '   ' + '+-—-'*self.width + '+\n'
+        bar = '   ' + '+–—–'*self.width + '+\n'
         graph = bar #bottom row
         last_row = ''
 
