@@ -89,3 +89,6 @@ class Board:
             Piece: removed piece
         '''
         return self.place(None, x, y)
+
+    def clear(self):
+        self.board = [[None for _ in range(self.width)] for _ in range(self.height)]

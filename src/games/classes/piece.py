@@ -8,4 +8,6 @@ class Piece:
         return self.color
 
     def __eq__(self, other):
-        return self.color == other.color
+        if other:
+            return self.color == other.color
+        return False #for handling None pieces

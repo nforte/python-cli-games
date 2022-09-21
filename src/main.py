@@ -3,6 +3,8 @@ from games import *
 from utils.my_os import clear
 
 if __name__ == '__main__':
+    clear()
+
     print('\nWhich game would you like to play?\n')
 
     for x in range(1, len(GAMES)+1):
@@ -17,6 +19,6 @@ if __name__ == '__main__':
     else:
         clear()
         print('Playing {}'.format(GAMES[int(choice)]))
-        locals()[GAMES[int(choice)]].main('Player 1', 'Player 2')
+        locals()[GAMES[int(choice)]].main()
 
     print('Quitting...')
