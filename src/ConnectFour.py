@@ -1,8 +1,8 @@
 #ConnectFour.py
 
-from games.classes.board import Board
-from games.classes.piece import Piece
-from games.classes.player import Player
+from classes.board import Board
+from classes.piece import Piece
+from classes.player import Player
 
 from utils.errors import InvalidCoordinate, InvalidPiecePlacement, OutOfBounds
 from utils import coord, my_os
@@ -166,7 +166,7 @@ class ConnectFour:
             except InvalidCoordinate:
                 ask = "Invalid column name. Please enter column number: "
             except OutOfBounds:
-                ask = "Out of bounds column. Please try again: "
+                ask = "Out of bounds. Please try again: "
             except InvalidPiecePlacement:
                 ask = "Column is full. Please enter a different column: "
 
@@ -201,3 +201,6 @@ def main():
 
     game.setPlayers(player1, player2)
     game.play()
+
+if __name__ == '__main__':
+    main()
