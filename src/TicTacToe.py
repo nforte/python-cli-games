@@ -26,6 +26,8 @@ class TicTacToe(BoardGame):
         super().render()
 
     def setIfWin(self):
+        if not self.prev_move:
+            return
         x, y = self.getPrevMove()
         piece = self.board[y][x]
 
@@ -58,6 +60,15 @@ class TicTacToe(BoardGame):
         while True:
             try:
                 response = input(ask)
+                if response.lower() == "undo":
+                    self.undoTurn()
+                    self.render()
+                    print("Went back a turn.")
+
+                    player = self.getCurrentPlayer()
+                    print("{}'s turn! ({})".format(player, player.color))
+                    piece = Piece(player.color)                   
+
                 success, x, y = coord.parseXY(response)
 
                 if not success:

@@ -35,7 +35,7 @@ class BoardGame(Game):
         if not self.prev_move:
             return
 
-        self.board = self.prev_state.pop()
+        self.board.board = self.prev_state.pop()
         self.prev_move.pop()
 
         self.turn = self.turn - 1 if self.turn > 0 else len(self.players) - 1

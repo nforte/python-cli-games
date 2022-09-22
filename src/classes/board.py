@@ -14,7 +14,7 @@ class Board:
         return self.board[index]
 
     def copyBoard(self):
-        return [[piece for piece in range(self.width)] for _ in range(self.height)]
+        return [[piece for piece in row] for row in self.board]
 
     def print(self):
         '''

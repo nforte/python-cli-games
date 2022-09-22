@@ -22,6 +22,9 @@ class ConnectFour(BoardGame):
 
     def setIfWin(self):
         '''Checks for win and adjusts game state if win is found'''
+        if not self.prev_move:
+            return
+
         x, y = self.getPrevMove()
         piece = self.board[y][x]
 
@@ -51,6 +54,15 @@ class ConnectFour(BoardGame):
         while True:
             try:
                 response = input(ask)
+                if response.lower() == "undo":
+                    self.undoTurn()
+                    self.render()
+                    print("Went back a turn.")
+
+                    player = self.getCurrentPlayer()
+                    print("{}'s turn! ({})".format(player, player.color))
+                    piece = Piece(player.color)
+
                 success, col = coord.parseCol(response)
 
                 if not success:
