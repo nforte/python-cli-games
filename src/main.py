@@ -10,7 +10,7 @@ GAMES = {1: "ConnectFour",
 if __name__ == '__main__':
     clear()
 
-    print('\nWhich game would you like to play?\n')
+    print('Which game would you like to play?\n')
 
     for x in range(1, len(GAMES)+1):
         print('  {}. {}'.format(x, GAMES[x]))

@@ -1,8 +1,8 @@
 #ConnectFour.py
 
-from classes.board import Board
-from classes.piece import Piece
+from classes.game import Game
 from classes.player import Player
+from classes.piece import Piece
 
 from utils.errors import InvalidCoordinate, InvalidPiecePlacement, OutOfBounds
 from utils import coord, my_os
@@ -12,83 +12,36 @@ BOARD_WIDTH=7
 BOARD_HEIGHT=6
 GAME_NAME="Connect Four"
 
-class ConnectFour:
-    last_placed = []
-    previous_state = [] #temp for future undo handling
+class ConnectFour(Game):
 
-    def __init__(self, player1=Player("Player 1", "X"), player2=Player("Player 2", "O")):
-        #temp values for objects not yet defined
-        self.board = Board(BOARD_WIDTH,BOARD_HEIGHT, x_label=True) #temp
-        self.player1 = player1
-        self.player2 = player2
-        self.turn = player1
-
-    def printBoard(self):
-        self.board.print()
-
-    def reset(self):
-        self.board.clear()
-        self.turn = self.player1
-        self.last_placed = []
-        self.previous_state = []
-
-    def setPlayers(self, p1, p2):
-        self.player1 = p1
-        self.player2 = p2
-        self.turn = p1
-
-    def render(self):
-        my_os.clear()
-        title_offset = (4*BOARD_WIDTH - len(GAME_NAME))//2 #if someone adjusts game size
-        print("\n   " + " "*title_offset + GAME_NAME)
-        self.board.print()
-        print()
+    def __init__(self):
+        super().__init__(GAME_NAME, BOARD_WIDTH, BOARD_HEIGHT, x_label=True)
 
     def checkWin(self):
-        '''
-        Check for win
-
-        Returns:
-            Boolean: whether placed piece causes the player to win
-        '''
-        x, y = self.last_placed[0], self.last_placed[1]
+        '''Checks for win and adjusts game state if win is found'''
+        x, y = self.getPrevMove()
         piece = self.board[y][x]
-        winner = self.player1 if piece.color == self.player1.color else self.player2
 
+        res = 0
         #==== Check for 4 in a row up and down====
         count = 0
         for i in range(y+1): #only need to check below piece
-            if self.board[i][x] == piece:
-                count += 1
-            else:
-                count = 0
+            count = count + 1 if self.board[i][x] == piece else 0
+            res = max(res, count)
 
-            if count == 4:
-                return (True, winner)
         #==== Check left and right ====
         count = 0
         for i in range(BOARD_WIDTH): #for simplicity, just scan whole row
-            if self.board[y][i] == piece:
-                count += 1
-            else:
-                count = 0
-
-            if count == 4:
-                return (True, winner)
+            count = count + 1 if self.board[y][i] == piece else 0
+            res = max(res, count)
 
         #==== Check top to bottom diag ====
         shift = min(x, BOARD_HEIGHT-y-1)
         i, j = x-shift, y+shift
-
         count = 0
         while i < BOARD_WIDTH and j >= 0:
-            if self.board[j][i] == piece:
-                count += 1
-            else:
-                count = 0
-
-            if count == 4:
-                return(True, winner)
+            count = count + 1 if self.board[j][i] == piece else 0
+            res = max(res, count)
 
             i += 1
             j -= 1
@@ -96,57 +49,28 @@ class ConnectFour:
         #==== Check bottom to top diag ====
         shift = min(x, y)
         i, j = x-shift, y-shift
-
         count = 0
         while i < BOARD_WIDTH and j < BOARD_HEIGHT:
-            if self.board[j][i] == piece:
-                count += 1
-            else:
-                count = 0
-
-            if count == 4:
-                return(True, winner)
+            count = count + 1 if self.board[j][i] == piece else 0
+            res = max(res, count)
 
             i += 1
             j += 1
 
-        #no 4 in a row found, so return false
-        return (False, winner)
+        if res >= 4:
+            self.end_game = True
+            self.winner = self.players[self.turn]
 
     def checkTie(self):
-        '''
-        Check for tie (whether board is full)
-
-        Returns:
-            Boolean: tie or not
-        '''
+        '''Checks for tie (whether board is full) and adjusts end_game state'''
         for column in range(BOARD_WIDTH):
             if not self.board[BOARD_HEIGHT-1][column]: #found empty, not tie
-                return False
+                return
 
-        return True
-
-    def placePiece(self, piece, col):
-        '''
-        Places piece in column
-
-        Args:
-            string column
-            Piece piece
-        Return:
-            return False if failed
-        '''
-        col_num = int(col) - 1 # -1 to convert col str to 0-based index
-
-        for bottom in range(0, self.board.height):
-            if not self.board[bottom][col_num]:
-                self.board.place(piece, col_num, bottom)
-                self.last_placed = [col_num, bottom]
-                return True
-        return False
+        self.end_game = True
 
     def handleTurn(self):
-        player = self.turn
+        player = self.getCurrentTurn()
         print("{}'s turn! ({})".format(player, player.color))
         piece = Piece(player.color)
 
@@ -176,43 +100,37 @@ class ConnectFour:
         self.render()
         print("{} placed {} into column {}.".format(player, piece, response))
 
-        #ending turn
-        self.turn = self.player2 if self.turn is self.player1 else self.player1
+    def initPlayers(self):
+        player1 = Player(input("What is first player's name? ").capitalize(), 'X')
+        player2 = Player(input("What is second player's name? ").capitalize(), 'O')
 
-    def play(self):
-        print('Starting ConnectFour')
-        self.render()
+        self.setPlayers([player1, player2])
 
-        has_winner, has_tie = False, False
-        while not has_winner and not has_tie:
-            self.handleTurn()
-            has_winner, winner = self.checkWin()
-            has_tie = self.checkTie()
+    def placePiece(self, piece, col):
+        '''
+        Places piece in column
 
-        if has_winner:
-            print("Congratulations! {} has won!".format(winner))
-        elif has_tie:
-            print("No more moves left. {} and {} have tied!".format(self.player1, self.player2))
+        Args:
+            int column
+            Piece piece
+        Return:
+            return False if failed
+        '''
+        col -= 1 # -1 to convert col str to 0-based index
 
+        for bottom in range(0, self.board.height):
+            if not self.board[bottom][col]:
+
+                self.setPrev([col, bottom])
+                self.board.place(piece, col, bottom)
+
+                return True
+
+        return False
 
 def main():
     game = ConnectFour()
-    game.render()
-
-    player1 = Player(input("What is first player's name? ").capitalize(), 'X')
-    player2 = Player(input("What is second player's name? ").capitalize(), 'O')
-
-    game.setPlayers(player1, player2)
-
-    while True:
-        game.play()
-        print()
-        ans = input("Would you like to play again?\n[y/n]: ")
-        if not (ans.lower() == 'y' or ans.lower() == 'yes'):
-            print("\nHave a nice day!")
-            exit()
-
-        game.reset()
+    game.play()
 
 if __name__ == '__main__':
     main()
