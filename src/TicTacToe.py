@@ -1,5 +1,6 @@
 #TicTacToe.py
-from classes.game import Game
+
+from classes.boardgame import BoardGame
 from classes.piece import Piece
 from classes.player import Player
 
@@ -9,7 +10,7 @@ from utils.errors import InvalidCoordinate, InvalidPiecePlacement, OutOfBounds
 BOARD_WIDTH = 3
 GAME_NAME = "Tic-Tac-Toe"
 
-class TicTacToe(Game):
+class TicTacToe(BoardGame):
     def __init__(self):
         super().__init__(GAME_NAME, BOARD_WIDTH, BOARD_WIDTH, True, True)
 
@@ -20,6 +21,9 @@ class TicTacToe(Game):
 
         self.setPlayers([player1, player2])
 
+    def render(self):
+        my_os.clear()
+        super().render()
 
     def setIfWin(self):
         x, y = self.getPrevMove()
@@ -36,8 +40,8 @@ class TicTacToe(Game):
 
 
     def setIfTie(self):
-        for i in range(BOARD_WIDTH):
-            for j in range(BOARD_WIDTH):
+        for i in range(self.board.width):
+            for j in range(self.board.width):
                 if not self.board[i][j]:
                     return
 
@@ -58,7 +62,7 @@ class TicTacToe(Game):
 
                 if not success:
                     raise InvalidCoordinate
-                elif not coord.isValidCoord(x, BOARD_WIDTH, y, BOARD_WIDTH):
+                elif not coord.isValidCoord(x, self.board.width, y, self.board.width):
                     raise OutOfBounds
                 elif not coord.isEmptyCoord(self.board, x,y):
                     raise InvalidPiecePlacement
@@ -69,7 +73,7 @@ class TicTacToe(Game):
             except OutOfBounds:
                 ask = "Out of bounds. Please try again: "
             except InvalidPiecePlacement:
-                ask = "Cell if full. Please enter a different cell: "
+                ask = "Cell is full. Please enter a different cell: "
 
         self.placePiece(piece, x, y)
 

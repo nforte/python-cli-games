@@ -1,4 +1,4 @@
-#Board.py
+#board.py
 
 class Board:
 
