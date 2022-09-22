@@ -21,7 +21,7 @@ class Game(ABC):
         self.end_game = False
         self.winner = None
 
-    def getCurrentTurn(self):
+    def getCurrentPlayer(self):
         return self.players[self.turn]
 
     def getPrevMove(self):
@@ -32,7 +32,7 @@ class Game(ABC):
         '''Set players'''
         self.players = players
 
-    def setPrev(self, new_move):
+    def setPrevState(self, new_move):
         '''Adds prev state and prev move to instance's stack'''
         self.prev_state.append(self.board.copyBoard())
         self.prev_move.append(new_move)
@@ -75,10 +75,10 @@ class Game(ABC):
         print()
 
     #================= Generic Game Phases/Wrappers ==============
-    def checkEnd(self):
+    def setIfEnd(self):
         '''Check for end of game'''
-        self.checkWin()
-        self.checkTie()
+        self.setIfWin()
+        self.setIfTie()
 
     def doTurns(self):
         '''
@@ -89,7 +89,7 @@ class Game(ABC):
             self.handleTurn()
 
             #end turn
-            self.checkEnd()
+            self.setIfEnd()
             self.turn = self.turn + 1 if self.turn < len(self.players) - 1 else 0
 
     def handleEnd(self):
@@ -131,12 +131,12 @@ class Game(ABC):
 
     #================= Game Mechanics =============================
     @abstractmethod
-    def checkWin(self):
+    def setIfWin(self):
         '''Check for win'''
         pass
 
     @abstractmethod
-    def checkTie(self):
+    def setIfTie(self):
         '''Check for tie'''
         pass
 

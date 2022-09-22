@@ -59,7 +59,7 @@ class Board:
         last_row = '  '
         alpha = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
-        loop = -1 #for handling large boards
+        loop = 0 #for handling large boards
         for i in range(self.width):
 
             if not y_label: #only bottom is labelled, so use numbers
@@ -69,8 +69,8 @@ class Board:
                 loop += 1 if i > 0 and i%26 == 0 else 0
                 mini_i = i%26
 
-                tag = '  ' if loop < 0 else ' '
-                tag += alpha[mini_i] if loop < 0 else alpha[mini_i] + alpha[loop].lower()
+                tag = '  ' if loop == 0 else ' '
+                tag += alpha[mini_i] if loop == 0 else alpha[mini_i] + alpha[loop].lower()
 
             last_row += tag + ' '
 

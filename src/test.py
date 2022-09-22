@@ -1,10 +1,10 @@
 #test.py
 
-from games.classes.board import Board
-from games.classes.piece import Piece
-from games.classes.player import Player
+from classes.board import Board
+from classes.piece import Piece
+from classes.player import Player
 
-from games import *
+import ConnectFour
 
 from sys import argv
 
@@ -65,4 +65,4 @@ if __name__ == '__main__':
     print("testing board (mainly print)")
     test_board()
     print("testing ConnectFour")
-    test_ConnectFour()
+    #test_ConnectFour()

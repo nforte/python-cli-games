@@ -17,7 +17,7 @@ class ConnectFour(Game):
     def __init__(self):
         super().__init__(GAME_NAME, BOARD_WIDTH, BOARD_HEIGHT, x_label=True)
 
-    def checkWin(self):
+    def setIfWin(self):
         '''Checks for win and adjusts game state if win is found'''
         x, y = self.getPrevMove()
         piece = self.board[y][x]
@@ -61,7 +61,7 @@ class ConnectFour(Game):
             self.end_game = True
             self.winner = self.players[self.turn]
 
-    def checkTie(self):
+    def setIfTie(self):
         '''Checks for tie (whether board is full) and adjusts end_game state'''
         for column in range(BOARD_WIDTH):
             if not self.board[BOARD_HEIGHT-1][column]: #found empty, not tie
@@ -70,7 +70,7 @@ class ConnectFour(Game):
         self.end_game = True
 
     def handleTurn(self):
-        player = self.getCurrentTurn()
+        player = self.getCurrentPlayer()
         print("{}'s turn! ({})".format(player, player.color))
         piece = Piece(player.color)
 
@@ -82,7 +82,7 @@ class ConnectFour(Game):
 
                 if not success:
                     raise InvalidCoordinate
-                elif not coord.validCoord(column, BOARD_WIDTH):
+                elif not coord.isValidCoord(column, BOARD_WIDTH):
                     raise OutOfBounds
 
                 #try to place piece, raise exception if failed
@@ -121,7 +121,7 @@ class ConnectFour(Game):
         for bottom in range(0, self.board.height):
             if not self.board[bottom][col]:
 
-                self.setPrev([col, bottom])
+                self.setPrevState([col, bottom])
                 self.board.place(piece, col, bottom)
 
                 return True
