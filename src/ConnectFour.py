@@ -116,8 +116,6 @@ class ConnectFour(Game):
         Return:
             return False if failed
         '''
-        col -= 1 # -1 to convert col str to 0-based index
-
         for bottom in range(0, self.board.height):
             if not self.board[bottom][col]:
 
@@ -133,4 +131,9 @@ def main():
     game.play()
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        my_os.goodbye()
+
+    my_os.goodbye()

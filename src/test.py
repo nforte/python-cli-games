@@ -6,6 +6,7 @@ from classes.player import Player
 
 import ConnectFour
 
+from utils import coord
 from sys import argv
 
 def test_board():
@@ -25,6 +26,7 @@ def test_board():
     tictac.print()
     tictac.remove(2,0)
     tictac.print()
+    tictac.copyBoard()
 
 def test_ConnectFour():
     def testTie():
@@ -60,9 +62,17 @@ def test_ConnectFour():
     game.printBoard()
     testTie()
 
+def test_coord():
+    tests = ["a1","aa1","aaa1","ab2"]
+    for test in tests:
+        print(test)
+        parsed = coord.parseXY(test)
+        print(parsed[0],parsed[1],parsed[2])
+
 
 if __name__ == '__main__':
     print("testing board (mainly print)")
     test_board()
     print("testing ConnectFour")
     #test_ConnectFour()
+    test_coord()

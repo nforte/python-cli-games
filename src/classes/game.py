@@ -25,8 +25,8 @@ class Game(ABC):
         return self.players[self.turn]
 
     def getPrevMove(self):
-        assert(not self.prev_move, "Must have previous move.")
-        return (self.prev_move[-1][0], self.prev_move[-1][1])
+        assert self.prev_move, "Must have previous move."
+        return self.prev_move[-1]
 
     def setPlayers(self, players):
         '''Set players'''
@@ -98,11 +98,11 @@ class Game(ABC):
         names = [self.winner] if self.winner else self.players
 
         if len(names) == 1:
-            s = names[0]
+            s = str(names[0])
         elif len(names) == 2:
-            s = names[0] + " and " + names[1]
+            s = str(names[0]) + " and " + str(names[1])
         else:
-            s = ', '.join(names[:-1]) + ", and " + names[-1]
+            s = ', '.join(names[:-1]) + ", and " + str(names[-1])
 
         if self.winner:
             print("Congratulations! {} won!".format(s))
@@ -114,7 +114,7 @@ class Game(ABC):
         self.render()
         self.initPlayers()
 
-        assert(not self.players, "Game must have at least one player.")
+        assert self.players, "Game must have at least one player."
 
         while not self.end_game:
             self.render()
@@ -126,8 +126,6 @@ class Game(ABC):
             ans = input("Would you like to play again?\n[y/n]: ")
             if ans.lower() == 'y' or ans.lower() == 'yes':
                 self.reset()
-
-        print("\nThanks for playing! Have a nice day!")
 
     #================= Game Mechanics =============================
     @abstractmethod

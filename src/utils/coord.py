@@ -3,7 +3,7 @@
 def parseCol(s:str):
 
     if s.isnumeric():
-        return (True, int(s))
+        return (True, int(s)-1) # -1 to shift to 0-indexed
 
     return (False, 0)
 
@@ -21,16 +21,18 @@ def parseXY(s:str):
     if len(x_str) < 1 or len(x_str) > 2 or not y_str.isnumeric():
         return (False, 0, 0)
 
-    y = int(y_str)
-
+    y = int(y_str) - 1
     x = alpha.find(x_str[0].lower())
+
     if len(x_str) == 2:
-        x += 26*alpha.find(x_str[1].lower())
+        if x_str[1] == 'a':
+            return (False, 0, 0)
+        x += 26*(alpha.find(x_str[1].lower()))
 
     return(True, x, y)
 
-def isValidCoord(x, x_max, y=1, y_max=1):
-    return 0 < x <= x_max and 0 < y <= y_max
+def isValidCoord(x, x_max, y=0, y_max=1):
+    return 0 <= x < x_max and 0 <= y < y_max
 
 def isEmptyCoord(board, x, y):
     return not board[y][x]
@@ -38,7 +40,7 @@ def isEmptyCoord(board, x, y):
 def countUpDown(board, col, piece):
     res, count = 0, 0
     for i in range(board.height):
-        count = count + 1 if self.board[i][col] == piece else 0
+        count = count + 1 if board[i][col] == piece else 0
         res = max(res, count)
 
     return res
@@ -50,7 +52,7 @@ def countTopLeftDiag(board, x, y, piece):
     shift = min(x, board.height-y-1)
     x, y = x-shift, y+shift
     while x < board.width and y >= 0:
-        count = count + 1 if self.board[y][x] == piece else 0
+        count = count + 1 if board[y][x] == piece else 0
         res = max(res, count)
 
         x += 1
@@ -65,7 +67,7 @@ def countBottomLeftDiag(board, x, y, piece):
     shift = min(x, y)
     x, y = x-shift, y-shift
     while x < board.width and y < board.height:
-        count = count + 1 if self.board[y][x] == piece else 0
+        count = count + 1 if board[y][x] == piece else 0
         res = max(res, count)
 
         x += 1
