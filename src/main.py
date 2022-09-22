@@ -1,10 +1,10 @@
 #main.py
 
-import ConnectFour, TicTacToe
+import FourInARow, TicTacToe
 
 from utils import my_os
 
-GAMES = {1: "ConnectFour",
+GAMES = {1: "FourInARow",
          2: "TicTacToe",
         }
 
