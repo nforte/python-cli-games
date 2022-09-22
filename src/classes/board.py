@@ -13,6 +13,9 @@ class Board:
     def __getitem__(self, index):
         return self.board[index]
 
+    def copyBoard(self):
+        return [[piece for piece in range(self.width)] for _ in range(self.height)]
+
     def print(self):
         '''
         Prints out board
@@ -75,7 +78,7 @@ class Board:
 
     def place(self, piece, x, y):
         '''
-        Place piece on empty spot
+        Place piece at (x,y)
         Returns:
             None or Piece: returns whatever was at (x,y)
         '''
