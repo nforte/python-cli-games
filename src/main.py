@@ -18,7 +18,7 @@ if __name__ == '__main__':
 
     try:
         choice = input('\nPlease select a number: ')
-        while not (choice.isnumeric() and 0 < int(choice) < len(GAMES)):
+        while not (choice.isnumeric() and 0 < int(choice) <= len(GAMES)):
             choice = input('"{}" is not a valid choice. Try again: '.format(choice))
 
         my_os.clear()
