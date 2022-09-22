@@ -2,8 +2,6 @@
 
 from abc import ABC, abstractmethod
 
-from classes.board import Board
-
 class Game(ABC):
 
     def __init__(self, name):
@@ -13,13 +11,23 @@ class Game(ABC):
 
         self.end_game = False
         self.winner = None
+        self.loser = None
 
     def getCurrentPlayer(self):
         return self.players[self.turn]
 
+    def addPlayer(self, player):
+        self.players.append(player)
+
     def setPlayers(self, players):
         '''Set players'''
         self.players = players
+
+    def setup(self):
+        self.render()
+        self.initPlayers()
+
+        assert self.players, "Game must have at least one player."
 
     #================ Changing Game State =======================
     def reset(self):
@@ -38,6 +46,7 @@ class Game(ABC):
         '''Check for end of game'''
         self.setIfWin()
         self.setIfTie()
+        self.setIfLost()
 
     def doTurns(self):
         '''
@@ -54,7 +63,13 @@ class Game(ABC):
     def handleEnd(self):
         '''Handles the print statements for the game's ending'''
         s = ''
-        names = [self.winner] if self.winner else self.players
+
+        if self.winner:
+            names = self.winner if isinstance(self.winner, list) else [self.winner]
+        elif self.loser:
+            names = self.loser if isinstance(self.loser, list) else [self.loser]
+        else:
+            names = self.players
 
         if len(names) == 1:
             s = str(names[0])
@@ -65,15 +80,14 @@ class Game(ABC):
 
         if self.winner:
             print("Congratulations! {} won!".format(s))
+        elif self.loser:
+            print("{} lost. Better luck next time.".format(s))
         else:
             print("End of game! {} have tied!".format(s))
 
     def play(self):
         '''Wrapper for playing the game'''
-        self.render()
-        self.initPlayers()
-
-        assert self.players, "Game must have at least one player."
+        self.setup()
 
         while not self.end_game:
             self.render()
@@ -95,6 +109,11 @@ class Game(ABC):
     @abstractmethod
     def setIfTie(self):
         '''Check for tie'''
+        pass
+
+    @abstractmethod
+    def setIfLost(self):
+        '''Check for lose'''
         pass
 
     @abstractmethod

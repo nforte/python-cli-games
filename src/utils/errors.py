@@ -15,3 +15,9 @@ class InvalidPiecePlacement(Error):
 class OutOfBounds(Error):
     """Raised when input is not within bounds of board"""
     pass
+
+class InvalidChar(Error):
+    pass
+
+class InvalidGuess(Error):
+    pass

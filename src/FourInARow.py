@@ -45,6 +45,9 @@ class FourInARow(BoardGame):
 
         self.end_game = True
 
+    def setIfLost(self):
+        pass
+
     def handleTurn(self):
         player = self.getCurrentPlayer()
         print("{}'s turn! ({})".format(player, player.color))

@@ -49,6 +49,8 @@ class TicTacToe(BoardGame):
 
         self.end_game = True
 
+    def setIfLost(self):
+        pass
 
     def handleTurn(self):
         player = self.getCurrentPlayer()
@@ -67,7 +69,7 @@ class TicTacToe(BoardGame):
 
                     player = self.getCurrentPlayer()
                     print("{}'s turn! ({})".format(player, player.color))
-                    piece = Piece(player.color)                   
+                    piece = Piece(player.color)
 
                 success, x, y = coord.parseXY(response)
 
