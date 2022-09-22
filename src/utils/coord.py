@@ -45,6 +45,14 @@ def countUpDown(board, col, piece):
 
     return res
 
+def countLeftRight(board, row, piece):
+    res, count = 0, 0
+    for i in range(board.width):
+        count = count + 1 if board[row][i] == piece else 0
+        res = max(res, count)
+
+    return res
+
 def countTopLeftDiag(board, x, y, piece):
     '''Count all pieces in same diagonal containing (x,y), from top left to bottom right'''
     res, count = 0, 0

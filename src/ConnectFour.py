@@ -22,44 +22,14 @@ class ConnectFour(Game):
         x, y = self.getPrevMove()
         piece = self.board[y][x]
 
-        res = 0
-        #==== Check for 4 in a row up and down====
-        count = 0
-        for i in range(y+1): #only need to check below piece
-            count = count + 1 if self.board[i][x] == piece else 0
-            res = max(res, count)
+        count = max(coord.countUpDown(self.board, x, piece),
+                    coord.countLeftRight(self.board, y, piece),
+                    coord.countTopLeftDiag(self.board, x, y, piece),
+                    coord.countBottomLeftDiag(self.board, x, y, piece))
 
-        #==== Check left and right ====
-        count = 0
-        for i in range(BOARD_WIDTH): #for simplicity, just scan whole row
-            count = count + 1 if self.board[y][i] == piece else 0
-            res = max(res, count)
-
-        #==== Check top to bottom diag ====
-        shift = min(x, BOARD_HEIGHT-y-1)
-        i, j = x-shift, y+shift
-        count = 0
-        while i < BOARD_WIDTH and j >= 0:
-            count = count + 1 if self.board[j][i] == piece else 0
-            res = max(res, count)
-
-            i += 1
-            j -= 1
-
-        #==== Check bottom to top diag ====
-        shift = min(x, y)
-        i, j = x-shift, y-shift
-        count = 0
-        while i < BOARD_WIDTH and j < BOARD_HEIGHT:
-            count = count + 1 if self.board[j][i] == piece else 0
-            res = max(res, count)
-
-            i += 1
-            j += 1
-
-        if res >= 4:
+        if count >= 4:
             self.end_game = True
-            self.winner = self.players[self.turn]
+            self.winner = self.getCurrentPlayer()
 
     def setIfTie(self):
         '''Checks for tie (whether board is full) and adjusts end_game state'''

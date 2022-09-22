@@ -26,10 +26,11 @@ class TicTacToe(Game):
         piece = self.board[y][x]
 
         count = max(coord.countUpDown(self.board, x, piece),
+                    coord.countLeftRight(self.board, y, piece),
                     coord.countTopLeftDiag(self.board, x, y, piece),
                     coord.countBottomLeftDiag(self.board, x, y, piece))
 
-        if count >=3:
+        if count >= 3:
             self.end_game = True
             self.winner = self.getCurrentPlayer()
 
