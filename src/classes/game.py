@@ -72,7 +72,7 @@ class Game(ABC):
 
         print()
         if self.winner:
-            print("Good game, {}! You won!".format(s))
+            print("Good game, everyone! {} won!".format(s))
         elif self.loser: #no winners (everyone lost or AI won)
             print("{} lost. Better luck next time.".format(s))
         else:
@@ -84,19 +84,21 @@ class Game(ABC):
 
     #============= Generic Game Phases/Wrappers ==================
     def endWrapper(self):
+        reset_players = False
         self.printEnd()
 
         print()
         ask = "Would you like to play again?\n[y/n]: "
+
         while True:
             ans = input(ask)
             if ans.lower() == 'y' or ans.lower() == 'yes':
 
+                #initPlayers if response is y/yes
                 ans = input("\nPlay with different players?\n[y/n]: ")
-                if ans =='y' or ans.lower() == 'yes':
-                    self.reset(True)
+                reset_players = (ans =='y' or ans.lower() == 'yes')
 
-                self.reset()
+                self.reset(reset_players)
 
             elif ans.lower() != 'n' and ans.lower() != 'no':
                 ask = 'Invalid input. Please input "yes" or "no": '
