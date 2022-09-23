@@ -1,11 +1,12 @@
 #main.py
 
-import FourInARow, TicTacToe
+import FourInARow, Hangman, TicTacToe
 
 from utils import my_os
 
 GAMES = {1: "FourInARow",
-         2: "TicTacToe",
+         2: "Hangman",
+         3: "TicTacToe",
         }
 
 if __name__ == '__main__':
@@ -28,4 +29,4 @@ if __name__ == '__main__':
     except KeyboardInterrupt:
         my_os.goodbye()
 
-    print('Quitting...')
+    print('\nQuitting...')

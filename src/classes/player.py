@@ -3,7 +3,7 @@
 class Player:
 
     def __init__(self, name:str, color:str='', species:str='human'):
-        self.name = name
+        self.name = name.capitalize()
         self.color = color
         self.species = species
 

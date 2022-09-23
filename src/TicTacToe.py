@@ -49,7 +49,7 @@ class TicTacToe(BoardGame):
 
         self.end_game = True
 
-    def setIfLost(self):
+    def setIfLose(self):
         pass
 
     def handleTurn(self):

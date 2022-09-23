@@ -19,22 +19,82 @@ class Hangman(Game):
         self.wrong_guesses = 0
         self.num_guesses = NUM_GUESSES
 
-        self.executioner = Player("Mr. Secret", "AI")
+        self.players = []
 
-        self.prev_state = []
+    def initGame(self):
+        self.render()
+        print("Let's play Hangman!!!\n")
 
-    def reset(self):
-        super().reset()
+        self.initPlayers()
+        self.setSecret()
+        self.render()
+
+    def initPlayers(self):
+        num_players = input("How many people are playing? ")
+        self.players = [Player("Mr. Hangman", species="AI")]
+
+        while True:
+            if num_players.isnumeric() and 1 <= int(num_players) <= MAX_PLAYERS:
+                num_players = int(num_players)
+                break
+            num_players = input("Try again. Please enter 1 to 5 players: ")
+
+        if num_players == 1:
+            name = input("What is your name? ")
+            self.addPlayer(name)
+            return
+
+        name = input("What is the word setter's name? ")
+        self.players[0] = Player(name)
+
+        for count in range(1, num_players): #skip player[0]
+            name = input("What is guesser {}'s name? ".format(str(count)))
+            self.addPlayer(Player(name))
+
+    #============= Setters and Getters ===========
+    def reset(self, reset_players=False):
         self.secret = ''
         self.revealed = []
         self.guessed = set()
         self.wrong_guesses = 0
 
-        self.prev_state = []
+        super().reset(reset_players)
+
+        self.setSecret()
+
+    def setSecret(self):
+        self.render()
+
+        if self.players[0].isAI():
+            #TODO: change so that a random word is selected
+            secret = 'Hangman is fun'
+            print('{} has selected a phrase.'.format(self.players[0]))
+            input('Press a key to continue.')
+
+        else:
+            print("Guessers, close your eyes.")
+            secret = input("Word Setter {}, please enter a secret word or phrase: ".format(self.players[0]))
+
+            while not all(x.isalpha() or x.isspace() for x in secret):
+                secret = input("Invalid input. Only use letters or spaces: ")
+
+        #set instance values
+        self.secret = secret
+        for letter in self.secret:
+            if letter.isspace():
+                self.revealed.append(' ')
+            else:
+                self.revealed.append(None)
+
+    #============ Printing Methods ===========
+    def printEnd(self):
+        print("\nThe secret was: {}".format(self.secret))
+        super().printEnd()
 
     def printGallows(self):
         head, body, legs = '', '', ''
         n = self.wrong_guesses
+        revealed = self.strRevealed()
 
         #====head====
         if n >= 1:
@@ -53,7 +113,7 @@ class Hangman(Game):
             legs = '  /\\'
 
         draw = (['  +———+ ',
-                 '   |   | ',
+                 '   |   | ' + '    ' + revealed,
                  '   |'+ head,
                  '   |'+ body,
                  '   |'+ legs,
@@ -61,71 +121,60 @@ class Hangman(Game):
                  ' /_______\\\n'])
 
         print("\n","\n".join(draw))
+        print("Letters Guessed")
+        print(' ', self.strGuessed())
+
+    def strRevealed(self):
+        converted = []
+        for char in self.revealed:
+            if not char:
+                converted.append('_')
+            else:
+                converted.append('{}'.format(char))
+
+        return ' '.join(converted)
+
+    def strGuessed(self):
+        convert = list(self.guessed)
+        convert.sort()
+        return ' '.join(convert)
 
     def render(self):
         my_os.clear()
         print("\n  {}".format(self.name))
         self.printGallows()
 
-    def setSecret(self):
-        #TODO: if exe is AI, randomly set secret word
-        print("Guessers, close your eyes.")
-        response = input("Executioner, please enter a secret word: ")
-
-        while not response.isalpha():
-            response = input("Try again. Only use letters: ")
-
-        self.secret = response
-        self.revealed = [None for letter in self.secret]
-
-    def setup(self):
-        print("Let's play Hangman!!!\n")
-        self.initPlayers()
-        self.setSecret()
-        self.render()
+    #=========== Game Mechanics Unique to Hangman ============
 
     def setIfWin(self):
         for ele in self.revealed:
             if not ele:
                 return
 
-        self.winner = self.players
+        self.winner = self.players[1:]
+        self.end_game = True
 
     def setIfTie(self):
         pass
 
-    def setIfLost(self):
+    def setIfLose(self):
         if self.wrong_guesses < self.num_guesses:
             return
 
-        if not self.executioner.isAI():
-            self.winner = self.executioner
+        if not self.players[0].isAI():
+            self.winner = self.players[0]
+            self.loser = self.players[1:]
         else:
-            self.loser = self.players
+            self.loser = Player("You") #special condition in 1-player game
 
         self.end_game = True
 
-    def initPlayers(self):
-        num_players = input("How many people are playing? ")
-
-        while True:
-            if num_players.isnumeric() and 1 < int(num_players) < MAX_PLAYERS:
-                num_players = int(num_players)
-                break
-            num_players = input("Try again. Please enter 2 or more: ")
-
-        #TODO: Add AI
-        exe_name = input("Who is choosing the secret word? ")
-        self.executioner = Player(exe_name)
-        start = 1
-
-        for count in range(start, num_players):
-            name = input("Who is Player {}? ".format(str(count+1)))
-            new_p = Player(name)
-            self.addPlayer(new_p)
-
     def handleTurn(self):
         player = self.getCurrentPlayer()
+
+        if player == self.players[0]: #skip the secret word setter
+            return
+
         print("{}'s turn to guess!".format(player))
 
         ask = ("Enter guess: ")
@@ -135,7 +184,7 @@ class Hangman(Game):
 
                 if not char.isalpha() or len(char) > 1:
                     raise InvalidChar
-                elif char.lower() in self.guessed:
+                elif char.upper() in self.guessed:
                     raise InvalidGuess
                 break
 
@@ -144,17 +193,16 @@ class Hangman(Game):
             except InvalidGuess:
                 ask = "Already guessed. Please guess another: "
 
-        self.guess(char)
+        self.guess(char.upper())
 
     def guess(self, char):
         self.guessed.add(char)
 
-        char = char.lower()
         player = self.getCurrentPlayer()
 
         found = False
         for i, letter in enumerate(self.secret):
-            if letter == char:
+            if letter.casefold() == char.casefold():
                 self.revealed[i] = letter
                 found = True
 
@@ -163,13 +211,17 @@ class Hangman(Game):
 
         self.render()
 
-        print("{} guessed \"{}\"".format(player, char.upper()))
-        if found:
-            print("{} guessed correctly!".format(player))
+        #print("\n{} guessed \"{}\"".format(player, char.upper()))
 
 def main():
+    my_os.clear()
     game = Hangman()
     game.play()
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        my_os.goodbye()
+
+    my_os.goodbye()

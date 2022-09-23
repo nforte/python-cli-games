@@ -23,12 +23,13 @@ class BoardGame(Game):
         self.prev_move.append(new_move)
 
     #================ Changing Game State =======================
-    def reset():
+    def reset(self, reset_players=False):
         '''Resets game state without changing players'''
-        super().reset()
         self.board.clear()
         self.prev_move = []
         self.prev_state = []
+
+        super().reset(reset_players)
 
     def undoTurn(self):
         '''Moves game state back one turn'''
