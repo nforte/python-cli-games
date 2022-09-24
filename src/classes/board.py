@@ -16,65 +16,73 @@ class Board:
     def copyBoard(self):
         return [[piece for piece in row] for row in self.board]
 
-    def print(self):
-        '''
-        Prints out board
-        Args:
-            Boolean x_label: if x should be labelled
-            Boolean y_label: if y should be labelled
-        '''
-        x_label, y_label = self.x_label, self.y_label
+    #============= Print Help Functions ==============
+    def _cellStr(self, x, y):
+        item = str(self.board[y][x]) if self.board[y][x] else ' '
+        return ' {} |'.format(item)
 
-        bar = '   ' + '+–—–'*self.width + '+\n'
-        graph = bar #bottom row
-        last_row = ''
-
-        #===== Create rows =====
-        for i in range(self.height):
-            new_row = ''
-            num = i + 1
-
-            row_label = '   '
-            if y_label:
-                row_label = ' ' + str(num) if num > 9 else '  ' + str(num)
-
-            new_row += row_label + '|'
-
-            #==== Append cells to row =====
-            for j in range(self.width):
-                if not self.board[i][j]:
-                    new_row += '   |'
-                else:
-                    new_row += ' ' + str(self.board[i][j]) + ' |'
-
-            #prepend new_rows so that (0,0) is in the bottom left corner
-            graph = bar + new_row + '\n' + graph
-
-        #===== Print table if there's no bottom labelling =====
-        if not x_label:
-            print(graph)
-            return
-
-        #===== Create label for bottom =====
-        last_row = '  '
+    def _colLabel(self, col_num):
         alpha = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
-        loop = 0 #for handling large boards
-        for i in range(self.width):
+        if not self.y_label: #column labels are numbers
+            space = '  ' if col_num < 9 else ' '
+            return '{}{} '.format(space, col_num + 1)
 
-            if not y_label: #only bottom is labelled, so use numbers
-                tag = '  ' if i < 9 else ' '
-                tag += str(i+1)
-            else:
-                loop += 1 if i > 0 and i%26 == 0 else 0
-                mini_i = i%26
+        #Column labels are letters, so do the following:
+        count = 0 #for handling large boards
+        while col_num >= 26:
+            col_num -= 26
+            count += 1
 
-                tag = '  ' if loop == 0 else ' '
-                tag += alpha[mini_i] if loop == 0 else alpha[mini_i] + alpha[loop].lower()
+        if count == 0:
+            return '  {} '.format(alpha[col_num])
+        else:
+            return ' {}{} '.format(alpha[col_num], alpha[count].lower())
 
-            last_row += tag + ' '
+    #last row filled with labels (or blank newline)
+    def _lastRow(self, left_offset=3):
+        if not self.x_label:
+            return '\n'
 
-        print(graph, last_row)
+        cell_labels = []
+        for col_num in range(self.width):
+            cell_labels.append(self._colLabel(col_num))
+
+        return ' '*left_offset + ''.join(cell_labels)
+
+    def _rowLabel(self, row_num):
+        num = row_num + 1
+        label = '   '
+        if self.y_label:
+            label = ' ' + str(num) if num > 9 else '  ' + str(num)
+
+        return label + '|'
+
+    def _rowStr(self, row_num, end=''):
+        s = []
+        s.append(self._rowLabel(row_num))
+
+        for x in range(self.width):
+            s.append(self._cellStr(x, row_num))
+
+        s.append(end)
+
+        return ''.join(s)
+
+    #============== Board Methods =========================
+    def print(self):
+        grid = []
+        bar = '   ' + '+–—–'*self.width + '+'
+        grid.append(bar)
+
+        #append cell rows and bar rows
+        for row_num in range(self.height-1, -1, -1): #iterate backwards so that (0,0) is at bottom
+            grid.append(self._rowStr(row_num))
+            grid.append(bar)
+
+        grid.append(self._lastRow())
+
+        print('\n'.join(grid))
 
     def place(self, piece, x, y):
         '''
@@ -103,36 +111,35 @@ class GoBoard(Board):
 
         super().__init__(width, width, True, True)
 
-    def print(self):
+    def _cellStr(self, x, y):
+        cell = str(self.board[y][x]) if self.board[y][x] else '.'
+        return ' {}'.format(cell)
 
-        border = "   +" + "——"*(self.width) + "—+"
-        grid = []
-
-        #==== Create Rows ====
-        empty_row = '   ' + '| '*(self.width + 2) + '|'
-        for i in range(self.width):
-            num = i + 1
-
-            row_label = ' ' + str(num) if num > 9 else '  ' + str(num)
-            new_row = row_label + '| '
-
-            #create and append cells
-            for j in range(self.width):
-                new_row += '.' if not self.board[i][j] else str(self.board[i][j])
-                new_row = new_row + ' ' if j < self.width - 1 else new_row
-
-            new_row += ' |' #end of row
-
-            grid.insert(0, new_row)
-
-        #===== Create label for bottom =====
-        last_row = '     '
+    def _colLabel(self, col_num):
         alpha = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+        return ' {}'.format(alpha[col_num])
 
-        for i in range(self.width):
-            last_row += alpha[i] + ' '
+    def print(self):
+        grid = []
+        border = '   +' + '——'*self.width + '—+'
 
-        grid.insert(0, border)
-        grid.extend((border, last_row))
+        grid.append(border)
+
+        #append cell rows and bar rows
+        for row_num in range(self.width-1, -1, -1): #iterate backwards so that (0,0) is at bottom
+            grid.append(self._rowStr(row_num,' |'))
+
+        grid.append(border)
+        grid.append(self._lastRow(left_offset=4))
 
         print('\n'.join(grid))
+
+
+class BlankBoard(Board):
+    def __init__(self, width, height, labels=True):
+        super().__init__(width, height, labels, labels)
+
+    def print(self):
+        labels = []
+        grid = []
+        pass
