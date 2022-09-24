@@ -133,13 +133,3 @@ class GoBoard(Board):
         grid.append(self._lastRow(left_offset=4))
 
         print('\n'.join(grid))
-
-
-class BlankBoard(Board):
-    def __init__(self, width, height, labels=True):
-        super().__init__(width, height, labels, labels)
-
-    def print(self):
-        labels = []
-        grid = []
-        pass
