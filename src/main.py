@@ -1,12 +1,13 @@
 #main.py
 
-import FourInARow, Hangman, TicTacToe
+import FourInARow, Gomoku, Hangman, TicTacToe
 
 from utils import my_os
 
 GAMES = {1: "FourInARow",
-         2: "Hangman",
-         3: "TicTacToe",
+         2: "Gomoku",
+         3: "Hangman",
+         4: "TicTacToe",
         }
 
 if __name__ == '__main__':

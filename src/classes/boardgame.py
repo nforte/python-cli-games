@@ -5,9 +5,9 @@ from classes.board import Board
 
 class BoardGame(Game):
 
-    def __init__(self, name, b_width, b_height, x_label=False, y_label=False):
+    def __init__(self, name, board:Board):
         super().__init__(name)
-        self.board = Board(b_width, b_height, x_label, y_label)
+        self.board = board
 
         #stacks
         self.prev_move = []
@@ -47,8 +47,8 @@ class BoardGame(Game):
         self.board.print()
 
     def render(self):
-        '''Clears cli and redraws title card and game board.'''
-        offset = (4*self.board.width - len(self.name))//2
+        '''Redraws title card and game board.'''
+        offset = (4*self.board.width - len(self.name))//2 #offset based on Board
         print("\n    " + " "*offset + self.name)
 
         self.printBoard()
@@ -59,6 +59,7 @@ class BoardGame(Game):
     #========= Parent Abstract Methods to Implement ========
     def setIfWin(self)
     def setIfTie(self)
+    def setIfLose(self)
     def initPlayers(self)
     def handleTurn(self)
     '''

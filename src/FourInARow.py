@@ -1,6 +1,7 @@
 #FourInARow.py
 
 from classes.boardgame import BoardGame
+from classes.board import Board
 from classes.player import Player
 from classes.piece import Piece
 
@@ -14,7 +15,8 @@ GAME_NAME="Four in a Row"
 
 class FourInARow(BoardGame):
     def __init__(self):
-        super().__init__(GAME_NAME, BOARD_WIDTH, BOARD_HEIGHT, x_label=True)
+        board = Board(BOARD_WIDTH, BOARD_HEIGHT, x_label=True)
+        super().__init__(GAME_NAME, board)
 
     def render(self):
         my_os.clear()
@@ -65,6 +67,8 @@ class FourInARow(BoardGame):
                     player = self.getCurrentPlayer()
                     print("{}'s turn! ({})".format(player, player.color))
                     piece = Piece(player.color)
+                    ask = "Please select a coordinate to place piece: "
+                    continue
 
                 success, col = coord.parseCol(response)
 
