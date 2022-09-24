@@ -95,3 +95,44 @@ class Board:
 
     def clear(self):
         self.board = [[None for _ in range(self.width)] for _ in range(self.height)]
+
+
+class GoBoard(Board):
+    def __init__(self, width=19):
+        width = 19 if width > 19 else width
+
+        super().__init__(width, width, True, True)
+
+    def print(self):
+
+        border = "   +" + "——"*(self.width) + "—+"
+        grid = []
+
+        #==== Create Rows ====
+        empty_row = '   ' + '| '*(self.width + 2) + '|'
+        for i in range(self.width):
+            num = i + 1
+
+            row_label = ' ' + str(num) if num > 9 else '  ' + str(num)
+            new_row = row_label + '| '
+
+            #create and append cells
+            for j in range(self.width):
+                new_row += '.' if not self.board[i][j] else str(self.board[i][j])
+                new_row = new_row + ' ' if j < self.width - 1 else new_row
+
+            new_row += ' |' #end of row
+
+            grid.insert(0, new_row)
+
+        #===== Create label for bottom =====
+        last_row = '     '
+        alpha = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+
+        for i in range(self.width):
+            last_row += alpha[i] + ' '
+
+        grid.insert(0, border)
+        grid.extend((border, last_row))
+
+        print('\n'.join(grid))
