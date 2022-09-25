@@ -21,3 +21,6 @@ class InvalidChar(Error):
 
 class InvalidGuess(Error):
     pass
+
+class InvalidChoice(Error):
+    pass

@@ -6,6 +6,7 @@ class Player:
         self.name = name.capitalize()
         self.color = color
         self.species = species
+        self.items = []
 
     def __str__(self):
         return self.name
@@ -15,3 +16,13 @@ class Player:
 
     def isAI(self):
         return self.species == 'AI'
+
+    def give(self, *items):
+        for item in items:
+            self.items.append(item)
+
+    def getNumItems(self):
+        return len(self.items)
+
+    def clearItems(self):
+        self.items = []

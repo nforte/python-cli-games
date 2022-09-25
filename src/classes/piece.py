@@ -34,3 +34,6 @@ class Card:
 
     def flip(self):
         self.isFaceDown = not self.isFaceDown
+
+    def isDown(self):
+        return self.isFaceDown
