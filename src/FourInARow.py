@@ -46,6 +46,7 @@ class FourInARow(BoardGame):
                 return
 
         self.setEndGame()
+        self.setTiePeople(self.players)
 
     def setIfLose(self):
         pass

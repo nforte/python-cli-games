@@ -12,6 +12,7 @@ class Game(ABC):
         self.end_game = False
         self.winner = []
         self.loser = []
+        self.tie_people = []
 
     def initGame(self):
         self.render()
@@ -34,6 +35,7 @@ class Game(ABC):
         self.end_game = False
         self.winner = []
         self.loser = []
+        self.tie_people = []
 
         if reset_players:
             self.players = []
@@ -51,6 +53,10 @@ class Game(ABC):
         for winner in winners:
             self.winner.append(winner)
 
+    def setTiePeople(self, *players):
+        for player in players:
+            self.tie_people.append(player)
+
     def setPlayer(self, *players):
         '''Set players'''
         for player in players:
@@ -63,31 +69,28 @@ class Game(ABC):
         self.setIfLose()
 
     #=================== Printing Methods ========================
+    def _strNames(self, players):
+        '''Converts a list of players into a string of names'''
+        if len(players) == 1:
+            return str(players[0])
+        elif len(players) == 2:
+            return str(players[0]) + " and " + str(players[1])
+        elif len(players) >= 3:
+            return ', '.join(map(str, players[:-1])) + ", and " + str(players[-1])
+
     def printEnd(self):
         '''Prints generic end statements for the game's ending'''
-        s = ''
-
-        if self.winner:
-            names = self.winner
-        elif self.loser:
-            names = self.loser
-        else:
-            names = self.players
-
-        if len(names) == 1:
-            s = str(names[0])
-        elif len(names) == 2:
-            s = str(names[0]) + " and " + str(names[1])
-        else:
-            s = ', '.join(map(str, names[:-1])) + ", and " + str(names[-1])
+        winners = self._strNames(self.winner)
+        losers = self._strNames(self.loser)
+        tie_people = self._strNames(self.tie_people)
 
         print()
         if self.winner:
-            print("Good game, everyone! {} won!".format(s))
-        elif self.loser: #no winners (everyone lost or AI won)
-            print("{} lost. Better luck next time.".format(s))
-        else:
-            print("{} tied! Good game, everyone!".format(s))
+            print("Good game, everyone! {} won!".format(winners))
+        elif self.tie_people:
+            print("{} tied! Good game, everyone!".format(tie_people))
+        elif self.loser:
+            print("{} lost. Better luck next time.".format(losers))
 
     @abstractmethod
     def render(self):
