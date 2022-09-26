@@ -10,8 +10,8 @@ class Game(ABC):
         self.name = name
 
         self.end_game = False
-        self.winner = None
-        self.loser = None
+        self.winner = []
+        self.loser = []
 
     def initGame(self):
         self.render()
@@ -25,9 +25,6 @@ class Game(ABC):
         pass
 
     #=============== Setters and Getters ======================
-    def addPlayer(self, player):
-        self.players.append(player)
-
     def getCurrentPlayer(self):
         return self.players[self.turn]
 
@@ -35,15 +32,29 @@ class Game(ABC):
         '''Resets the game but keeps same players'''
         self.turn = 0
         self.end_game = False
-        self.winner = None
+        self.winner = []
+        self.loser = []
 
         if reset_players:
+            self.players = []
             self.render()
             self.initPlayers()
 
-    def setPlayers(self, players):
+    def setEndGame(self):
+        self.end_game = True
+
+    def setLoser(self, *losers):
+        for loser in losers:
+            self.loser.append(loser)
+
+    def setWinner(self, *winners):
+        for winner in winners:
+            self.winner.append(winner)
+
+    def setPlayer(self, *players):
         '''Set players'''
-        self.players = players
+        for player in players:
+            self.players.append(player)
 
     def setIfEnd(self):
         '''Check for end of game and set the game to end if conditions are met'''
@@ -57,9 +68,9 @@ class Game(ABC):
         s = ''
 
         if self.winner:
-            names = self.winner if isinstance(self.winner, list) else [self.winner]
+            names = self.winner
         elif self.loser:
-            names = self.loser if isinstance(self.loser, list) else [self.loser]
+            names = self.loser
         else:
             names = self.players
 

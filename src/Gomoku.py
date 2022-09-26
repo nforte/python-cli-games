@@ -23,7 +23,7 @@ class Gomoku(BoardGame):
         player1 = Player(input("What is first player's name? ").capitalize(), '@')
         player2 = Player(input("What is second player's name? ").capitalize(), 'O')
 
-        self.setPlayers([player1, player2])
+        self.setPlayer(player1, player2)
 
     def setIfWin(self):
         '''Checks for win and adjusts game state if win is found'''
@@ -39,15 +39,16 @@ class Gomoku(BoardGame):
                     coord.countBottomLeftDiag(self.board, x, y, piece))
 
         if count >= 5:
-            self.end_game = True
-            self.winner = self.getCurrentPlayer()
+            self.setEndGame()
+            self.setWinner(self.getCurrentPlayer())
 
     def setIfTie(self):
         for row in self.board:
             for ele in row:
                 if not ele:
                     return
-        self.end_game = True
+
+        self.setEndGame()
 
     def setIfLose(self):
         pass

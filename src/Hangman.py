@@ -31,7 +31,6 @@ class Hangman(Game):
 
     def initPlayers(self):
         num_players = input("How many people are playing? ")
-        self.players = [Player("Mr. Hangman", species="AI")]
 
         while True:
             if num_players.isnumeric() and 1 <= int(num_players) <= MAX_PLAYERS:
@@ -41,15 +40,15 @@ class Hangman(Game):
 
         if num_players == 1:
             name = input("What is your name? ")
-            self.addPlayer(name)
+            self.setPlayer(Player("Mr. Hangman", species="AI"), Player(name))
             return
 
         name = input("What is the word setter's name? ")
-        self.players[0] = Player(name)
+        self.setPlayer(Player(name))
 
         for count in range(1, num_players): #skip player[0]
             name = input("What is guesser {}'s name? ".format(str(count)))
-            self.addPlayer(Player(name))
+            self.setPlayer(Player(name))
 
     #============= Setters and Getters ===========
     def reset(self, reset_players=False):
@@ -151,8 +150,8 @@ class Hangman(Game):
             if not ele:
                 return
 
-        self.winner = self.players[1:]
-        self.end_game = True
+        self.setWinner(*(self.players[1:]))
+        self.setEndGame()
 
     def setIfTie(self):
         pass
@@ -162,17 +161,18 @@ class Hangman(Game):
             return
 
         if not self.players[0].isAI():
-            self.winner = self.players[0]
-            self.loser = self.players[1:]
+            self.setWinner(self.players[0])
+            self.setLoser(self.players[1:])
         else:
-            self.loser = Player("You") #special condition in 1-player game
+            self.loser = [Player("You")] #special condition in 1-player game
 
-        self.end_game = True
+        self.setEndGame()
 
     def handleTurn(self):
         player = self.getCurrentPlayer()
 
         if player == self.players[0]: #skip the secret word setter
+            self.endTurn()
             return
 
         print("{}'s turn to guess!".format(player))

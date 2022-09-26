@@ -21,7 +21,7 @@ class TicTacToe(BoardGame):
         player1 = Player(input("What is first player's name? ").capitalize(), 'X')
         player2 = Player(input("What is second player's name? ").capitalize(), 'O')
 
-        self.setPlayers([player1, player2])
+        self.setPlayer(player1, player2)
 
     def render(self):
         my_os.clear()
@@ -39,8 +39,8 @@ class TicTacToe(BoardGame):
                     coord.countBottomLeftDiag(self.board, x, y, piece))
 
         if count >= 3:
-            self.end_game = True
-            self.winner = self.getCurrentPlayer()
+            self.setEndGame()
+            self.setWinner(self.getCurrentPlayer())
 
 
     def setIfTie(self):
@@ -49,7 +49,7 @@ class TicTacToe(BoardGame):
                 if not self.board[i][j]:
                     return
 
-        self.end_game = True
+        self.setEndGame()
 
     def setIfLose(self):
         pass

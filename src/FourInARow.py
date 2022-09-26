@@ -36,8 +36,8 @@ class FourInARow(BoardGame):
                     coord.countBottomLeftDiag(self.board, x, y, piece))
 
         if count >= 4:
-            self.end_game = True
-            self.winner = self.getCurrentPlayer()
+            self.setEndGame()
+            self.setWinner(self.getCurrentPlayer())
 
     def setIfTie(self):
         '''Checks for tie (whether board is full) and adjusts end_game state'''
@@ -45,7 +45,7 @@ class FourInARow(BoardGame):
             if not self.board[self.board.height-1][column]: #found empty, not tie
                 return
 
-        self.end_game = True
+        self.setEndGame()
 
     def setIfLose(self):
         pass
@@ -92,13 +92,13 @@ class FourInARow(BoardGame):
         print("{} placed {} into column {}.".format(player, piece, response))
 
         self.setIfEnd()
-        self.endTurn()        
+        self.endTurn()
 
     def initPlayers(self):
         player1 = Player(input("What is first player's name? ").capitalize(), 'X')
         player2 = Player(input("What is second player's name? ").capitalize(), 'O')
 
-        self.setPlayers([player1, player2])
+        self.setPlayer(player1, player2)
 
     def placePiece(self, piece, col):
         '''Places piece in column'''
