@@ -83,6 +83,9 @@ class Game(ABC):
         pass
 
     #============= Generic Game Phases/Wrappers ==================
+    def endTurn(self):
+        self.turn = self.turn + 1 if self.turn < len(self.players) - 1 else 0
+
     def endWrapper(self):
         reset_players = False
         self.printEnd()
@@ -113,10 +116,6 @@ class Game(ABC):
         '''
         while not self.end_game:
             self.handleTurn()
-
-            #end turn
-            self.setIfEnd()
-            self.turn = self.turn + 1 if self.turn < len(self.players) - 1 else 0
 
     def play(self):
         '''Wrapper for playing the game'''

@@ -195,6 +195,9 @@ class Hangman(Game):
 
         self.guess(char.upper())
 
+        self.setIfEnd()
+        self.endTurn()
+
     def guess(self, char):
         self.guessed.add(char)
 

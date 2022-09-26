@@ -97,6 +97,8 @@ class TicTacToe(BoardGame):
         self.render()
         print("{} placed {} into cell {}.".format(player, piece, response.capitalize()))
 
+        self.setIfEnd()
+        self.endTurn()
 
     def placePiece(self, piece, x, y):
         self.setPrevState([x, y])

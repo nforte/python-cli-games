@@ -101,6 +101,9 @@ class Gomoku(BoardGame):
         self.render()
         print("{} placed {} at {}.".format(player, piece, response.upper()))
 
+        self.setIfEnd()
+        self.endTurn()
+
     def placePiece(self, piece, x, y):
         self.setPrevState([x, y])
         self.board.place(piece, x ,y)

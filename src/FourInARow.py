@@ -91,6 +91,9 @@ class FourInARow(BoardGame):
         self.render()
         print("{} placed {} into column {}.".format(player, piece, response))
 
+        self.setIfEnd()
+        self.endTurn()        
+
     def initPlayers(self):
         player1 = Player(input("What is first player's name? ").capitalize(), 'X')
         player2 = Player(input("What is second player's name? ").capitalize(), 'O')
