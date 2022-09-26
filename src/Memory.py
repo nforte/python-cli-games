@@ -11,8 +11,8 @@ from utils.errors import InvalidCoordinate, InvalidChoice, OutOfBounds
 CARD_FACES = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ123456'
 
 GAME_NAME = 'The Memory Game'
-GRID_WIDTH = 9
-GRID_LENGTH = 8
+GRID_WIDTH = 2
+GRID_LENGTH = 2
 MAX_PLAYERS = 6
 
 class Memory(Game):
@@ -34,7 +34,7 @@ class Memory(Game):
         num_players = input("How many people are playing? ")
 
         while True:
-            if num_players.isnumeric() and 1 <= int(num_players) <= MAX_PLAYERS:
+            if num_players.isnumeric() and 2 <= int(num_players) <= MAX_PLAYERS:
                 num_players = int(num_players)
                 break
             num_players = input("Try again. Please enter 1 to 6 players: ")
@@ -101,11 +101,11 @@ class Memory(Game):
             self.grid.remove(x1, y1)
             self.grid.remove(x2, y2)
 
-            self.render()
-            self.handleTurn() #don't change turns if a pair is found
+        self.render()
+        self.setIfEnd()
 
-        else:
-            self.render()
+        if first_card != second_card:
+            self.endTurn()
 
     def isValidChoice(self, x, y):
         #is not empty and is not face up
