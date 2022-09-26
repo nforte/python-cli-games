@@ -8,4 +8,5 @@ A work-in-progress collection of some simple games written in python3 that can b
 - Four in a Row
 - Gomoku
 - Hangman
+- Memory Game
 - Tic Tac Toe
