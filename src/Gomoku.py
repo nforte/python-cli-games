@@ -49,7 +49,7 @@ class Gomoku(BoardGame):
                     return
 
         self.setEndGame()
-        self.setTiePeople(self.players)
+        self.setTiePlayers(*self.players)
 
     def setIfLose(self):
         pass

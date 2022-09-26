@@ -50,7 +50,7 @@ class TicTacToe(BoardGame):
                     return
 
         self.setEndGame()
-        self.setTiePeople(self.players)
+        self.setTiePeople(*self.players)
 
     def setIfLose(self):
         pass

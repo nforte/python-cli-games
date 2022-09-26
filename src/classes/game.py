@@ -53,7 +53,7 @@ class Game(ABC):
         for winner in winners:
             self.winner.append(winner)
 
-    def setTiePeople(self, *players):
+    def setTiePlayers(self, *players):
         for player in players:
             self.tie_people.append(player)
 
