@@ -29,7 +29,7 @@ class Card:
 
     def __eq__(self, other):
         if other:
-            return self.face == self.face
+            return self.face == other.face
         return False
 
     def flip(self):

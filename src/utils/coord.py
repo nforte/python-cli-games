@@ -8,6 +8,9 @@ def parseCol(s:str):
     return (False, 0)
 
 def parseXY(s:str):
+    if not s:
+        return(False, 0, 0)
+        
     alpha = 'abcdefghijklmnopqrstuvwxyz'
 
     for i in range(len(s)):

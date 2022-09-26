@@ -69,7 +69,7 @@ class Hangman(Game):
             #TODO: change so that a random word is selected
             secret = 'Hangman is fun'
             print('{} has selected a phrase.'.format(self.players[0]))
-            input('Press a key to continue.')
+            input('Press Enter to continue.')
 
         else:
             print("Guessers, close your eyes.")
